@@ -9,7 +9,7 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {
-                  sh 'docker build -t capstone-devops .'
+                  sh 'docker build -t 7akim/capstone-devops .'
             }
         }
         stage('Push Docker Image') {
