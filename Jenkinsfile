@@ -1,8 +1,8 @@
 pipeline {
-  environment {
-    registry = "7akim/docker-test"
-    registryCredential = 'dockerhub'
-    dockerImage = ''
+    environment {
+        registry = "7akim/docker-test"
+        registryCredential = 'dockerhub'
+        dockerImage = ''
     }
     agent any
     stages {
@@ -14,27 +14,27 @@ pipeline {
         }
     }
         stage('Building image') {
-        steps{
-            script {
-            dockerImage = docker.build registry + ":$BUILD_NUMBER"
+            steps{
+                script {
+                dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                    }
                 }
-            }
         }
         stage('Push Docker Image') {
-        steps{
-            script {
-                docker.withRegistry( '', registryCredential ) {
-                dockerImage.push()
-                }  
+            steps{
+                script {
+                    docker.withRegistry( '', registryCredential ) {
+                    dockerImage.push()
+                    }  
+                }
             }
-        }
         }
 
         stage('Remove Unused docker image') {
             steps{
             sh "docker rmi $registry:$BUILD_NUMBER"
+            }
         }
-}
         stage('Deploying') {
             steps{
                 withAWS(credentials: 'aws', region: 'us-west-1') {
