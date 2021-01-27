@@ -1,4 +1,9 @@
 pipeline {
+  environment {
+    registry = "7akim/docker-test"
+    registryCredential = 'dockerhub'
+    dockerImage = ''
+    }
     agent any
     stages {
         stage('Lint HTML') {
@@ -7,18 +12,26 @@ pipeline {
                 sh 'hadolint Dockerfile'
             }
         }
-        stage('Build Docker Image') {
-            steps {
-                  sh 'docker build -t 7akim/capstone-devops .'
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build registry + ":$BUILD_NUMBER"
             }
         }
         stage('Push Docker Image') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                    sh 'docker push 7akim/capstone-devops'
+          steps{
+            script {
+              docker.withRegistry( '', registryCredential ) {
+                dockerImage.push()
                 }  
             }
         }
+        }
+        stage('Remove Unused docker image') {
+          steps{
+            sh "docker rmi $registry:$BUILD_NUMBER"
+      }
+    }
         stage('Deploying') {
             steps{
                 withAWS(credentials: 'aws', region: 'us-west-1') {
