@@ -12,26 +12,29 @@ pipeline {
                 sh 'hadolint Dockerfile'
             }
         }
-    stage('Building image') {
-      steps{
-        script {
-          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+    }
+        stage('Building image') {
+        steps{
+            script {
+            dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                }
             }
         }
         stage('Push Docker Image') {
-          steps{
+        steps{
             script {
-              docker.withRegistry( '', registryCredential ) {
+                docker.withRegistry( '', registryCredential ) {
                 dockerImage.push()
                 }  
             }
         }
         }
+
         stage('Remove Unused docker image') {
-          steps{
+            steps{
             sh "docker rmi $registry:$BUILD_NUMBER"
-      }
-    }
+        }
+}
         stage('Deploying') {
             steps{
                 withAWS(credentials: 'aws', region: 'us-west-1') {
@@ -49,5 +52,5 @@ pipeline {
                 sh "docker system prune"
             }
         }
-    }
+       
 }
