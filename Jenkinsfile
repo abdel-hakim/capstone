@@ -51,6 +51,5 @@ pipeline {
             steps{
                 sh "docker system prune"
             }
-        }
-       
+        }    
 }
