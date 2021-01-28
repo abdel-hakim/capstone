@@ -1,7 +1,7 @@
 
 pipeline { 
     environment {
-        registry = "7akim/docker-test"
+        registry = "7akim/capstone-devops"
         registryCredential = 'dockerhub'
         dockerImage = ''
         }
@@ -40,9 +40,9 @@ pipeline {
                     withAWS(credentials: 'aws', region: 'us-west-1') {
                         sh "aws eks --region us-west-1 update-kubeconfig --name capstone"
                         sh "kubectl apply -f deployment.yml"
-                        sh "kubectl set image deployments/capstone-cloud-devops capstone-cloud-devops=7akim/capstone-devops:latest"
-                        sh 'kubectl rollout status deployment capstone-cloud-devops'
-                        sh 'kubectl get deployment capstone-cloud-devops'
+                        sh "kubectl set image deployments/capstone-devops capstone-devops=7akim/capstone-devops:latest"
+                        sh 'kubectl rollout status deployment capstone-devops'
+                        sh 'kubectl get deployment capstone-devops'
                         sh 'kubectl get all'
                     }
                 }
