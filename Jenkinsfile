@@ -1,4 +1,5 @@
-pipeline { environment {
+pipeline { 
+    dockerenvv {
         registry = "7akim/docker-test"
         registryCredential = 'dockerhub'
         dockerImage = ''
