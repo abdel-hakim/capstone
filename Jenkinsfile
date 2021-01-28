@@ -1,26 +1,26 @@
+
 pipeline { 
-    dockerenvv {
+    environment {
         registry = "7akim/docker-test"
         registryCredential = 'dockerhub'
         dockerImage = ''
-    }
-        agent any
-        stages {
-            stage('Lint HTML') {
+        }
+         agent any
+         stages {
+             stage('Lint HTML') {
                 steps {
                     sh 'tidy -q -e *.html'
                     sh 'hadolint Dockerfile'
                 }
-            }
-        }
-            stage('Building image') {
+             }
+             stage('Building image') {
                 steps{
                     script {
                     dockerImage = docker.build registry + ":$BUILD_NUMBER"
                         }
                 }
-            }
-            stage('Push Docker Image') {
+             }
+             stage('Push Docker Image') {
                 steps{
                     script {
                         docker.withRegistry( '', registryCredential ) {
@@ -28,14 +28,14 @@ pipeline {
                         }  
                     }
                 }
-            }
+             }
 
-            stage('Remove Unused docker image') {
+             stage('Remove Unused docker image') {
                 steps{
                 sh "docker rmi $registry:$BUILD_NUMBER"
                 }
-            }
-            stage('Deploying') {
+             }
+             stage('Deploying') {
                 steps{
                     withAWS(credentials: 'aws', region: 'us-west-1') {
                         sh "aws eks --region us-west-1 update-kubeconfig --name capstone"
@@ -46,9 +46,11 @@ pipeline {
                         sh 'kubectl get all'
                     }
                 }
-            }
-            stage("Cleaning up") {
+             }
+             stage("Cleaning up") {
                 steps{
                     sh "docker system prune"
                 }
-            }    
+             }
+         }    
+}
