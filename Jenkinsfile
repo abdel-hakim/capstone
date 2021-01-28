@@ -38,12 +38,14 @@ pipeline {
              stage('Deploying') {
                 steps{
                     withAWS(credentials: 'aws', region: 'us-west-1') {
+                        sh "eksctl create cluster --name capstone version 1.17 "
                         sh "aws eks --region us-west-1 update-kubeconfig --name capstone"
                         sh "kubectl apply -f deployment.yml"
                         sh "kubectl set image deployments/capstone-devops capstone-devops=7akim/capstone-devops:latest"
                         sh 'kubectl rollout status deployment capstone-devops'
                         sh 'kubectl get deployment capstone-devops'
                         sh 'kubectl get all'
+                        sh "kubectl get pods --all-namespaces -o wide"
                     }
                 }
              }
