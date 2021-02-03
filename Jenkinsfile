@@ -108,7 +108,7 @@ pipeline {
 				}
 			}
 		}
-            stage('Deploy green container with LB service') {
+            stage('Get Info') {
 			steps {
 				withAWS(credentials: 'aws', region: 'us-west-1') {
 					sh '''
