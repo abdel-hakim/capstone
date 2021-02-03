@@ -7,62 +7,62 @@ pipeline {
         }
          agent any
          stages {
-             stage('Install dependencies') {
-                steps {
-                    // sh 'sudo apt-get install build-essential -y'
-                    sh 'make install'
-                }
-             }
-            stage('lint code') {
-            steps {
-                sh 'echo "linting started"'
-                sh 'make lint'
-            }
-            }
-            //  stage('Building image') {
-            //     steps{
-            //         script {
-            //         dockerImage = docker.build registry + ":$BUILD_NUMBER"
-            //             }
+            //  stage('Install dependencies') {
+            //     steps {
+            //         // sh 'sudo apt-get install build-essential -y'
+            //         sh 'make install'
             //     }
             //  }
-             stage('Build Docker Image') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOC_USERNAME', passwordVariable: 'DOC_PASSWORD')]) {
-                sh 'docker build -t 7akim/capstone-devops .'
-                }
-            }
-            }
-            //  stage('Push Docker Image') {
-            //     steps{
-            //         script {
-            //             docker.withRegistry( '', registryCredential ) {
-            //             dockerImage.push()
-            //             }  
-            //         }
+            // stage('lint code') {
+            // steps {
+            //     sh 'echo "linting started"'
+            //     sh 'make lint'
+            // }
+            // }
+            // //  stage('Building image') {
+            // //     steps{
+            // //         script {
+            // //         dockerImage = docker.build registry + ":$BUILD_NUMBER"
+            // //             }
+            // //     }
+            // //  }
+            //  stage('Build Docker Image') {
+            // steps {
+            //     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOC_USERNAME', passwordVariable: 'DOC_PASSWORD')]) {
+            //     sh 'docker build -t 7akim/capstone-devops .'
             //     }
-            //  }
-            stage('Push Docker Image') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOC_USERNAME', passwordVariable: 'DOC_PASSWORD')]) {
-                sh '''
-                    docker login -u $DOC_USERNAME -p $DOC_PASSWORD
-                    docker push 7akim/capstone-devops
-                    '''
-                }
-            }
-            }         
+            // }
+            // }
+            // //  stage('Push Docker Image') {
+            // //     steps{
+            // //         script {
+            // //             docker.withRegistry( '', registryCredential ) {
+            // //             dockerImage.push()
+            // //             }  
+            // //         }
+            // //     }
+            // //  }
+            // stage('Push Docker Image') {
+            // steps {
+            //     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOC_USERNAME', passwordVariable: 'DOC_PASSWORD')]) {
+            //     sh '''
+            //         docker login -u $DOC_USERNAME -p $DOC_PASSWORD
+            //         docker push 7akim/capstone-devops
+            //         '''
+            //     }
+            // }
+            // }         
 
             //  stage('Remove Unused docker image') {
             //     steps{
             //     sh "docker rmi $registry:$BUILD_NUMBER"
             //     }
             //  }
-            stage('Remove Unused docker image') {
-            steps {
-                sh 'docker rmi $registry'
-            }
-            }
+            // stage('Remove Unused docker image') {
+            // steps {
+            //     sh 'docker rmi $registry'
+            // }
+            // }
             stage('create cluster') {
             steps {
                     withAWS(credentials: 'aws', region: 'us-west-1') {
