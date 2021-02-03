@@ -108,21 +108,17 @@ pipeline {
 				}
 			}
 		}
-            //  stage('Deploying') {
-            //     steps{
-            //         withAWS(credentials: 'aws', region: 'us-west-1') {
-            //             sh "eksctl create cluster --name capstone version 1.17 "
-            //             sh "aws eks --region us-west-1 update-kubeconfig --name capstone"
-            //             sh "kubectl apply -f deployment.yml"
-            //             sh "kubectl set image deployments/capstone-devops capstone-devops=7akim/capstone-devops:latest"
-            //             sh 'kubectl rollout status deployment capstone-devops'
-            //             sh 'kubectl get deployment capstone-devops'
-            //             sh 'kubectl get all'
-            //             sh "kubectl get pods --all-namespaces -o wide"
-            //             sh "kubectl describe service NAME_OF_SERVICE"
-            //         }
-            //     }
-            //  }
+            stage('Deploy green container with LB service') {
+			steps {
+				withAWS(credentials: 'aws', region: 'us-west-1') {
+					sh '''
+					kubectl get all
+                    kubectl get pods --all-namespaces -o wide
+                    kubectl describe service capstone-service
+                    '''
+				}
+			}
+		}
              stage("Cleaning up") {
                 steps{
                     sh "docker system prune"
