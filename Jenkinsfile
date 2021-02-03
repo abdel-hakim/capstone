@@ -63,7 +63,13 @@ pipeline {
                 sh 'docker rmi $registry'
             }
             }
-
+            stage('create cluster') {
+            steps {
+                    withAWS(credentials: 'aws', region: 'us-west-1') {
+                        sh "eksctl-create-cluster.sh"
+                }
+            }
+            }
              stage('Deploying') {
                 steps{
                     withAWS(credentials: 'aws', region: 'us-west-1') {
