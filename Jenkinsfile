@@ -26,7 +26,7 @@ pipeline {
             //             }
             //     }
             //  }
-            stage('Build Docker Image') {
+             stage('Build Docker Image') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOC_USERNAME', passwordVariable: 'DOC_PASSWORD')]) {
                 sh 'docker build -t 7akim/capstone-devops .'
