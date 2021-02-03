@@ -20,8 +20,6 @@ install:
 	#     wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 &&\
     #  chmod +x /bin/hadolint
 	(\
-		wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64;\
-    	chmod +x /bin/hadolint;\
 		python3 -m venv ./.venv;\
 		. .venv/bin/activate;\
 		pip3 install -r requirements.txt;\
@@ -40,4 +38,3 @@ lint:
 	# This should be run from inside a virtualenv
 	pylint --disable=R,C,W1203,W1202,W1309 app.py
 
-all: install lint test
