@@ -20,11 +20,12 @@ install:
 	#     wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 &&\
     #  chmod +x /bin/hadolint
 	(\
+		wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64;\
+    	chmod +x /bin/hadolint;\
 		python3 -m venv ./.venv;\
 		. .venv/bin/activate;\
 		pip3 install -r requirements.txt;\
-	    wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 &&\
-    	chmod +x /bin/hadolint
+
 	)
 test:
 	# Additional, optional, tests could go here
