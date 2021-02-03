@@ -63,11 +63,11 @@ pipeline {
             //     sh 'docker rmi $registry'
             // }
             // }
-            
+
             stage('create cluster') {
             steps {
                     withAWS(credentials: 'aws', region: 'us-west-1') {
-                        sh "eksctl-create-cluster.sh"
+                        sh "eksctl create cluster --name capstone --version 1.17 --node-type t2.micro --nodes 3 --nodes-min 1 --nodes-max 3 --managed"
                 }
             }
             }
