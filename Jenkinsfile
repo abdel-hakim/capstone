@@ -70,11 +70,19 @@ pipeline {
             //     }
             // }
             // }
-                stage('Added New kubectl Context and set it') {
+                stage('Added New kubectl') {
             steps {
                 withAWS(credentials: 'aws', region: 'us-west-1') {
                     sh '''
                         aws eks --region us-west-1 update-kubeconfig --name capstone
+                    '''
+                }
+            }
+        }
+                stage('Context set it') {
+            steps {
+                withAWS(credentials: 'aws', region: 'us-west-1') {
+                    sh '''
                         kubectl config use-context arn:aws:eks:us-west-1:485307050721:cluster/capstone
                     '''
                 }
