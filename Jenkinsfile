@@ -15,6 +15,7 @@ pipeline {
             stage('lint code') {
             steps {
                 sh 'echo "linting started"'
+                sh 'sudo apt-get install build-essential'
                 sh 'make lint'
             }
             }
