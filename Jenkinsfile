@@ -7,34 +7,62 @@ pipeline {
         }
          agent any
          stages {
-             stage('Lint HTML') {
+             stage('Install dependencies') {
                 steps {
-                    sh 'tidy -q -e *.html'
-                    sh 'hadolint Dockerfile'
+                    sh 'make install'
                 }
              }
-             stage('Building image') {
-                steps{
-                    script {
-                    dockerImage = docker.build registry + ":$BUILD_NUMBER"
-                        }
+            stage('lint code') {
+            steps {
+                sh 'echo "linting started"'
+                sh 'make lint'
+            }
+            }
+            //  stage('Building image') {
+            //     steps{
+            //         script {
+            //         dockerImage = docker.build registry + ":$BUILD_NUMBER"
+            //             }
+            //     }
+            //  }
+            stage('Build Docker Image') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOC_USERNAME', passwordVariable: 'DOC_PASSWORD')]) {
+                sh 'docker build -t 7akim/capstone-devops .'
                 }
-             }
-             stage('Push Docker Image') {
-                steps{
-                    script {
-                        docker.withRegistry( '', registryCredential ) {
-                        dockerImage.push()
-                        }  
-                    }
+            }
+            }
+            //  stage('Push Docker Image') {
+            //     steps{
+            //         script {
+            //             docker.withRegistry( '', registryCredential ) {
+            //             dockerImage.push()
+            //             }  
+            //         }
+            //     }
+            //  }
+            stage('Push Docker Image') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOC_USERNAME', passwordVariable: 'DOC_PASSWORD')]) {
+                sh '''
+                    docker login -u $DOC_USERNAME -p $DOC_PASSWORD
+                    docker push 7akim/capstone-devops
+                    '''
                 }
-             }
+            }
+            }         
 
-             stage('Remove Unused docker image') {
-                steps{
-                sh "docker rmi $registry:$BUILD_NUMBER"
-                }
-             }
+            //  stage('Remove Unused docker image') {
+            //     steps{
+            //     sh "docker rmi $registry:$BUILD_NUMBER"
+            //     }
+            //  }
+            stage('Remove Unused docker image') {
+            steps {
+                sh 'docker rmi $registry'
+            }
+            }
+
              stage('Deploying') {
                 steps{
                     withAWS(credentials: 'aws', region: 'us-west-1') {
