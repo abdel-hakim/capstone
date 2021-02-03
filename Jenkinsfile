@@ -9,13 +9,13 @@ pipeline {
          stages {
              stage('Install dependencies') {
                 steps {
+                    sh 'sudo apt-get install build-essential'
                     sh 'make install'
                 }
              }
             stage('lint code') {
             steps {
                 sh 'echo "linting started"'
-                sh 'sudo apt-get install build-essential'
                 sh 'make lint'
             }
             }
