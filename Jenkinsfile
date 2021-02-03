@@ -63,6 +63,7 @@ pipeline {
             //     sh 'docker rmi $registry'
             // }
             // }
+            
             stage('create cluster') {
             steps {
                     withAWS(credentials: 'aws', region: 'us-west-1') {
