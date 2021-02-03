@@ -13,13 +13,17 @@ setup:
 
 install:
 	# This should be run from inside a virtualenv
-		python3 -m venv ./.venv && \
-		pip install --upgrade pip &&\
-		pip install -r requirements.txt
-		pip install pylint
-	    wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 &&\
-     chmod +x /bin/hadolint
-
+	# 	python3 -m venv ./.venv && \
+	# 	pip install --upgrade pip &&\
+	# 	pip install -r requirements.txt
+	# 	pip install pylint
+	#     wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 &&\
+    #  chmod +x /bin/hadolint
+	(\
+		python3 -m venv ./.venv;\
+		. .venv/bin/activate;\
+		pip3 install -r requirements.txt;\
+	)
 test:
 	# Additional, optional, tests could go here
 	#python -m pytest -vv --cov=myrepolib tests/*.py
