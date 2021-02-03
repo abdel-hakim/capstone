@@ -93,7 +93,7 @@ pipeline {
 				withAWS(credentials: 'aws', region: 'us-west-1') {
 					sh '''
                         whoami
-						kubectl apply -f ./deployment-configs/blue-image.yml										
+						kubectl apply -f ./deployment-configs/blue-con.yml										
                     '''
 				}
 			}
