@@ -9,7 +9,7 @@ pipeline {
          stages {
              stage('Install dependencies') {
                 steps {
-                    sh 'sudo apt-get install build-essential'
+                    sh 'apt-get install build-essential -y'
                     sh 'make install'
                 }
              }
