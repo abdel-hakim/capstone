@@ -48,8 +48,6 @@ aws configure
 
 17. Install the aws plugin in Jenkins :
 
-
-
 Restart jenkins
 sudo systemctl restart jenkins
 
